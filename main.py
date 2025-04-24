@@ -21,3 +21,6 @@ G = 2
 
 # Generate private key
 private_key = secrets.randbelow(P - 2) + 2  # Must be between 2 and P-2
+
+# Generate public key
+public_key = pow(G, private_key, P)
