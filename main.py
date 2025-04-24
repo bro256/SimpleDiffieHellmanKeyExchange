@@ -1,3 +1,6 @@
+import secrets
+
+
 # Define public parameters for Diffie-Hellman
 # Using RFC 3526 Group 14 (2048-bit MODP Group)
 P_HEX = """
@@ -14,3 +17,7 @@ P = int(P_HEX, 16)
 
 # Generator: G = 2 (commonly used and safe for DH)
 G = 2
+
+
+# Generate private key
+private_key = secrets.randbelow(P - 2) + 2  # Must be between 2 and P-2
