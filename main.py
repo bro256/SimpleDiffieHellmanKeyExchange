@@ -1,4 +1,5 @@
-
+# Define public parameters for Diffie-Hellman
+# Using RFC 3526 Group 14 (2048-bit MODP Group)
 P_HEX = """
 FFFFFFFF FFFFFFFF C90FDAA2 2168C234 C4C6628B 80DC1CD1
 29024E08 8A67CC74 020BBEA6 3B139B22 514A0879 8E3404DD
@@ -8,5 +9,8 @@ EE386BFB 5A899FA5 AE9F2411 7C4B1FE6 49286651 ECE65381
 FFFFFFFF FFFFFFFF
 """.replace(" ", "").replace("\n", "")
 
+# Convert hex string to integer
 P = int(P_HEX, 16)
+
+# Generator: G = 2 (commonly used and safe for DH)
 G = 2
