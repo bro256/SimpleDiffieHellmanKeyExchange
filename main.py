@@ -19,8 +19,10 @@ P = int(P_HEX, 16)
 G = 2
 
 
-# Generate private key
-private_key = secrets.randbelow(P - 2) + 2  # Must be between 2 and P-2
+# Alice generates her private and public keys
+alice_private = secrets.randbelow(P - 2) + 2
+alice_public = pow(G, alice_private, P)
 
-# Generate public key
-public_key = pow(G, private_key, P)
+# Bob generates his private and public keys
+bob_private = secrets.randbelow(P - 2) + 2
+bob_public = pow(G, bob_private, P)
