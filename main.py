@@ -26,3 +26,7 @@ alice_public = pow(G, alice_private, P)
 # Bob generates his private and public keys
 bob_private = secrets.randbelow(P - 2) + 2
 bob_public = pow(G, bob_private, P)
+
+# Alice and Bob compute the shared secret using each other's public keys
+alice_shared_secret = pow(bob_public, alice_private, P)
+bob_shared_secret = pow(alice_public, bob_private, P)
