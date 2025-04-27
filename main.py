@@ -1,4 +1,5 @@
 import secrets
+from hashlib import sha256
 
 
 # Define public parameters for Diffie-Hellman
@@ -30,3 +31,10 @@ bob_public = pow(G, bob_private, P)
 # Alice and Bob compute the shared secret using each other's public keys
 alice_shared_secret = pow(bob_public, alice_private, P)
 bob_shared_secret = pow(alice_public, bob_private, P)
+
+# Derive a key from the shared secret using SHA-256 hash function
+def derive_key(shared_secret: int) -> bytes:
+    return sha256(shared_secret.to_bytes((shared_secret.bit_length() + 7) // 8, 'big')).digest()
+
+alice_key = derive_key(alice_shared_secret)
+bob_key = derive_key(bob_shared_secret)
