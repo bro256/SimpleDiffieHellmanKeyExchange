@@ -38,3 +38,9 @@ def derive_key(shared_secret: int) -> bytes:
 
 alice_key = derive_key(alice_shared_secret)
 bob_key = derive_key(bob_shared_secret)
+
+
+# Print both derived keys
+print("Alice's derived key (SHA-256):", alice_key.hex())
+print("Bob's derived key   (SHA-256):", bob_key.hex())
+
