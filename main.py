@@ -44,3 +44,6 @@ bob_key = derive_key(bob_shared_secret)
 print("Alice's derived key (SHA-256):", alice_key.hex())
 print("Bob's derived key   (SHA-256):", bob_key.hex())
 
+# Verify that both sides computed the same shared secret
+assert alice_key == bob_key, "❌ ERROR: Alice and Bob keys do not match!"
+print("✅ SUCCESS: Shared key established successfully!")
