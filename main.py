@@ -19,6 +19,10 @@ P = int(P_HEX, 16)
 # Generator: G = 2 (commonly used and safe for DH)
 G = 2
 
+# Print public parameters
+print("Public Parameters:")
+print(f"P (2048-bit prime): {hex(P)}")
+print(f"G (generator): {G}\n")
 
 # Alice generates her private and public keys
 alice_private = secrets.randbelow(P - 2) + 2
