@@ -1,5 +1,7 @@
 import secrets
+import hmac
 from hashlib import sha256
+
 
 
 # Define public parameters for Diffie-Hellman
@@ -36,12 +38,30 @@ bob_public = pow(G, bob_private, P)
 alice_shared_secret = pow(bob_public, alice_private, P)
 bob_shared_secret = pow(alice_public, bob_private, P)
 
-# Derive a key from the shared secret using SHA-256 hash function
-def derive_key(shared_secret: int) -> bytes:
-    return sha256(shared_secret.to_bytes((shared_secret.bit_length() + 7) // 8, 'big')).digest()
+# HKDF-Extract step: Uses a salt and the input key material (shared secret) 
+# to create a pseudorandom key (PRK) using HMAC-SHA256.
+def hkdf_extract(salt: bytes, input_key_material: bytes, hash_func=sha256) -> bytes:
+    return hmac.new(salt, input_key_material, hash_func).digest()
 
-alice_key = derive_key(alice_shared_secret)
-bob_key = derive_key(bob_shared_secret)
+# HKDF-Expand step: Expands the PRK into output key material (OKM) of the desired length.
+# The 'info' parameter allows context-specific key derivation (e.g., "encryption", "auth").
+def hkdf_expand(prk: bytes, info: bytes, length: int, hash_func=sha256) -> bytes:
+    hash_len = hash_func().digest_size
+    n = (length + hash_len - 1) // hash_len  # Number of hash blocks needed
+    okm = b""
+    t = b""
+    for i in range(1, n + 1):
+        t = hmac.new(prk, t + info + bytes([i]), hash_func).digest()
+        okm += t
+    return okm[:length]
+
+# Main key derivation function using HKDF (extract + expand).
+# Converts the shared integer secret to bytes, performs extract and expand,
+# and returns a key of the requested length (default 32 bytes = 256 bits).
+def derive_key_hkdf(shared_secret: int, salt: bytes = b"", info: bytes = b"dh key", length: int = 32) -> bytes:
+    shared_bytes = shared_secret.to_bytes((shared_secret.bit_length() + 7) // 8, 'big')
+    prk = hkdf_extract(salt, shared_bytes)
+    return hkdf_expand(prk, info, length)
 
 
 # Print both derived keys
