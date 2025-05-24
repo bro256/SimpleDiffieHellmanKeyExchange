@@ -1,5 +1,3 @@
 # SimpleDiffieHellmanKeyExchange
 
-A Python implementation of the Diffie-Hellman key exchange protocol utilizing the 2048-bit MODP prime group as defined in RFC 3526, Group 14. This simulation generates secure random private keys for both parties using Python's secrets module and computes their corresponding public keys via modular exponentiation. The shared secret is derived by each party through the other's public key and their own private key, followed by the application of the SHA-256 cryptographic hash function to generate a symmetric encryption key. The system performs a verification step to ensure both parties compute identical shared keys, confirming the integrity of the exchange.
-
-This implementation is designed for those looking to learn cryptography and understand the core principles of key exchange protocols.
+Python implementation of Diffie-Hellman key exchange using X25519 and HKDF key derivation, intended purely for educational purposes to illustrate secure key exchange and cryptographic key derivation concepts. Designed for learners who want to understand the core principles of key exchange protocols.
