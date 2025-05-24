@@ -14,12 +14,33 @@ bob_public = bob_private.public_key()
 alice_shared_secret = alice_private.exchange(bob_public)
 bob_shared_secret = bob_private.exchange(alice_public)
 
-# HKDF-Extract step: Uses a salt and the input key material (shared secret) 
 def hkdf_extract(salt: bytes, input_key_material: bytes, hash_func=sha256) -> bytes:
+    """
+    Perform the HKDF-Extract step.
+    
+    Args:
+        salt (bytes): A non-secret random value (can be empty).
+        input_key_material (bytes): The shared secret from ECDH.
+        hash_func (Callable): The hash function to use (default: sha256).
+
+    Returns:
+        bytes: A pseudorandom key (PRK).
+    """
     return hmac.new(salt, input_key_material, hash_func).digest()
 
-# HKDF-Expand step: Expands the PRK into output key material (OKM) of the desired length.
 def hkdf_expand(prk: bytes, info: bytes, length: int, hash_func=sha256) -> bytes:
+    """
+    Perform the HKDF-Expand step to derive key material.
+
+    Args:
+        prk (bytes): Pseudorandom key from HKDF-Extract.
+        info (bytes): Context/application-specific information (optional).
+        length (int): Desired length of output keying material in bytes.
+        hash_func (Callable): The hash function to use (default: sha256).
+
+    Returns:
+        bytes: Output keying material (OKM).
+    """
     hash_len = hash_func().digest_size
     n = (length + hash_len - 1) // hash_len
     okm = b""
@@ -29,14 +50,26 @@ def hkdf_expand(prk: bytes, info: bytes, length: int, hash_func=sha256) -> bytes
         okm += t
     return okm[:length]
 
-# Main key derivation function using HKDF (extract + expand)
 def derive_key_hkdf(shared_secret: bytes, salt: bytes = b"", info: bytes = b"ecdh key", length: int = 32) -> bytes:
+    """
+    Derive a symmetric key from a shared ECDH secret using HKDF.
+
+    Args:
+        shared_secret (bytes): The shared ECDH secret.
+        salt (bytes, optional): A non-secret random value (default: b"").
+        info (bytes, optional): Context/application-specific information (default: b"ecdh key").
+        length (int, optional): Length of the derived key in bytes (default: 32).
+
+    Returns:
+        bytes: The derived symmetric key.
+    """
     prk = hkdf_extract(salt, shared_secret)
     return hkdf_expand(prk, info, length)
 
 # Derive keys
 alice_key = derive_key_hkdf(alice_shared_secret)
 bob_key = derive_key_hkdf(bob_shared_secret)
+
 # Print both derived keys
 print("Alice's derived key (SHA-256):", alice_key.hex())
 print("Bob's derived key   (SHA-256):", bob_key.hex())
