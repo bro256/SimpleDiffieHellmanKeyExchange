@@ -2,7 +2,6 @@ import hmac
 from hashlib import sha256
 from cryptography.hazmat.primitives.asymmetric import x25519
 
-
 # Alice generates her private and public keys
 alice_private = x25519.X25519PrivateKey.generate()
 alice_public = alice_private.public_key()
@@ -14,7 +13,6 @@ bob_public = bob_private.public_key()
 # Alice and Bob compute the shared secret
 alice_shared_secret = alice_private.exchange(bob_public)
 bob_shared_secret = bob_private.exchange(alice_public)
-
 
 # HKDF-Extract step: Uses a salt and the input key material (shared secret) 
 def hkdf_extract(salt: bytes, input_key_material: bytes, hash_func=sha256) -> bytes:
@@ -35,7 +33,6 @@ def hkdf_expand(prk: bytes, info: bytes, length: int, hash_func=sha256) -> bytes
 def derive_key_hkdf(shared_secret: bytes, salt: bytes = b"", info: bytes = b"ecdh key", length: int = 32) -> bytes:
     prk = hkdf_extract(salt, shared_secret)
     return hkdf_expand(prk, info, length)
-
 
 # Derive keys
 alice_key = derive_key_hkdf(alice_shared_secret)
