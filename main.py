@@ -63,6 +63,8 @@ def derive_key_hkdf(shared_secret: int, salt: bytes = b"", info: bytes = b"dh ke
     prk = hkdf_extract(salt, shared_bytes)
     return hkdf_expand(prk, info, length)
 
+alice_key = derive_key_hkdf(alice_shared_secret)
+bob_key = derive_key_hkdf(bob_shared_secret)
 
 # Print both derived keys
 print("Alice's derived key (SHA-256):", alice_key.hex())
