@@ -56,11 +56,7 @@ def derive_key_hkdf(
     """
     logging.info("Deriving key using HKDF.")
 
-    info = (
-        b"ecdh key"
-        + b"initiator=" + initiator_pub
-        + b"responder=" + responder_pub
-    )
+    info = b"ecdh key|initiator=" + initiator_pub + b"|responder=" + responder_pub
 
     return HKDF(
         algorithm=hashes.SHA256(),
